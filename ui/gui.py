@@ -39,6 +39,20 @@ def main(page: ft.Page):
             data=i
         ))
 
+        dialog = ft.AlertDialog(
+            title=ft.Text("Редактировать задание"),
+            content=ft.Column([
+                ft.Text("daswdw")
+            ], spacing=15, width=450, height=450, scroll=ft.ScrollMode.AUTO),
+            actions=[
+                ft.TextButton("Отмена"),
+                ft.ElevatedButton("Сохранить"),
+            ],
+        )
+        page.dialog = dialog
+        dialog.open = True
+        page.update()
+
     view_schedule = ft.Row(
         [
             ft.Column(
