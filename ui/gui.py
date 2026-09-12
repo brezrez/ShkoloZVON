@@ -6,8 +6,17 @@ import flet as ft
 def main(page: ft.Page):
     page.title = 'ШколоZVOн'
 
-    # page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
-    # page.vertical_alignment = ft.MainAxisAlignment.CENTER
+    def get_clicked(e):
+        bell_list.controls = [ft.TextField(label='Укажите не укажите'), ft.Button('Добавить звонок', on_click=new_bell)]
+        dialog_window.open = True
+        page.update()
+
+    def new_bell(e):
+        bell_list.controls.append(ft.TextField(label='Время', width=100))
+        dialog_window.update()
+        bell_list.update()
+        page.update()
+
 
     def click_schedule(e):
 
@@ -16,23 +25,19 @@ def main(page: ft.Page):
                 i.content.controls[0].value = not i.content.controls[0].value
         page.update()
         pass
+    global bell_list
+    bell_list = ft.Column([ft.TextField(label='Укажите не укажите'), ft.Button('Добавить звонок', on_click=new_bell)], spacing=15, width=450, height=450, scroll=ft.ScrollMode.AUTO)
 
     dialog_window = ft.AlertDialog(
         title=ft.Text("Редактировать задание"),
-        content=ft.Column([
-            ft.Text("daswdw")
-        ], spacing=15, width=450, height=450, scroll=ft.ScrollMode.AUTO),
+        content=bell_list,
         actions=[
-            ft.TextButton("Отмена"),
+            ft.Button("Отмена",on_click = lambda e: page.close(dialog_window)),
             ft.ElevatedButton("Сохранить"),
         ],
     )
 
 
-
-    def get_clicked(self):
-        dialog_window.open = True
-        page.update()
 
         
 
