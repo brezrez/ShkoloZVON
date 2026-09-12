@@ -31,7 +31,7 @@ def main(page: ft.Page):
 
 
     def get_clicked(self):
-        dialog.open = True
+        dialog_window.open = True
         page.update()
 
         
