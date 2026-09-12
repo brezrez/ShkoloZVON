@@ -1,3 +1,5 @@
+from tkinter import dialog
+
 import flet as ft
 
 
@@ -15,15 +17,34 @@ def main(page: ft.Page):
         page.update()
         pass
 
-    schedule_ZVOnkov = ["1 расписание", "2 расписание", "3 расписание"]
+    dialog_window = ft.AlertDialog(
+        title=ft.Text("Редактировать задание"),
+        content=ft.Column([
+            ft.Text("daswdw")
+        ], spacing=15, width=450, height=450, scroll=ft.ScrollMode.AUTO),
+        actions=[
+            ft.TextButton("Отмена"),
+            ft.ElevatedButton("Сохранить"),
+        ],
+    )
+
+
+
+    def get_clicked(self):
+        dialog.open = True
+        page.update()
+
+        
+
+    schedule_zvonkov = ["1 расписание", "2 расписание", "3 расписание"]
     schedule = []
 
-    for i in schedule_ZVOnkov:
-        print(schedule_ZVOnkov.index(i))
+    for i in schedule_zvonkov:
+        print(schedule_zvonkov.index(i))
         schedule.append(ft.Container(
             ft.Row(
                 controls=[ft.Checkbox(value=False),
-                          ft.Text(spans=[ft.TextSpan(i, on_click=lambda e: click_schedule(e), data=i)])]
+                          ft.Text(spans=[ft.TextSpan(i, on_click=lambda e: click_schedule(e), data=i)],size=20),dialog_window]
             ),
             width=400,
             alignment=ft.alignment.Alignment(0, 0),
@@ -38,29 +59,15 @@ def main(page: ft.Page):
             bgcolor="white",
             data=i
         ))
-
-        dialog = ft.AlertDialog(
-            title=ft.Text("Редактировать задание"),
-            content=ft.Column([
-                ft.Text("daswdw")
-            ], spacing=15, width=450, height=450, scroll=ft.ScrollMode.AUTO),
-            actions=[
-                ft.TextButton("Отмена"),
-                ft.ElevatedButton("Сохранить"),
-            ],
-        )
-        page.dialog = dialog
-        dialog.open = True
-        page.update()
-
     view_schedule = ft.Row(
         [
             ft.Column(
                 controls=schedule
             ),
-            ft.Row([ft.FilledButton("Создать новое расписание")], alignment=ft.MainAxisAlignment.END)
+            ft.Row([ft.FilledButton("Создать новое расписание",on_click=get_clicked)], alignment=ft.MainAxisAlignment.END,)
         ]
     )
+
 
     page.add(
         view_schedule
