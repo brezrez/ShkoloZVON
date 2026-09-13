@@ -36,6 +36,7 @@ def main(page: ft.Page):
     def new_timetable(e):
         schedule_zvonkov.append(timetable.value)
         page.close(dialog_window)
+        timetable.value=''
         schedule.append(ft.Container(
             ft.Row(
                 controls=[ft.Checkbox(value=False),
