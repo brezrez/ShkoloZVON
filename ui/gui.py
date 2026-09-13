@@ -1,3 +1,5 @@
+from tkinter import dialog
+
 import flet as ft
 
 
@@ -20,6 +22,17 @@ def main(page: ft.Page):
         scroll=ft.ScrollMode.AUTO
     )
 
+    def close_dialog(e):
+        page.close(dialog_window)
+
+    dialog_window = ft.AlertDialog(
+        title=ft.Text("Редактировать задание"),
+        content=bell_list,
+        actions=[
+            ft.Button("Отмена", on_click=close_dialog),
+            ft.Button("Сохранить", on_click=lambda e: new_timetable(e)),
+        ],
+    )
 
     def get_clicked(e):
         bell_list.controls = [timetable, ft.Button('Добавить звонок', on_click=new_bell)]
@@ -39,45 +52,8 @@ def main(page: ft.Page):
         page.update()
         pass
 
-
-    schedule_zvonkov = ['Полное расписание', 'Сокращенное расписание', 'Залупа']
-
-
-    def new_timetable(e):
-        schedule_zvonkov.append(timetable.value)
-        view_schedule = ft.Row(
-            [
-                ft.Column(
-                    controls=start()
-                ),
-                ft.Row([ft.FilledButton("Создать новое расписание", on_click=get_clicked)],
-                       alignment=ft.MainAxisAlignment.END, )
-            ]
-        )
-        page.clean()
-        page.add(view_schedule)
-        print(schedule)
-        page.update()
-        page.close(dialog_window)
-        timetable.value = ''
-        schedule = []
-
-
-    global bell_list
-    bell_list = ft.Column([ft.TextField(label='Название расписания'), ft.Button('Добавить звонок', on_click=new_bell)], spacing=15, width=450, height=450, scroll=ft.ScrollMode.AUTO)
-
-    dialog_window = ft.AlertDialog(
-        title=ft.Text("Редактировать задание"),
-        content=bell_list,
-        actions=[
-            ft.Button("Отмена",on_click = lambda e: page.close(dialog_window)),
-            ft.Button("Сохранить", on_click=new_timetable),
-        ],
-    )
-    global schedule
-
-    schedule = []
     def start():
+        schedule.clear()  # Очищаем старый список перед пересборкой
         for i in schedule_zvonkov:
             schedule.append(ft.Container(
                 ft.Row(
@@ -119,14 +95,14 @@ def main(page: ft.Page):
     # Главный каркас страницы, который мы НЕ меняем динамически, а только обновляем его внутренности
     view_schedule = ft.Row(
         [
-            ft.Column(
-                controls=start()
-            ),
-            ft.Row([ft.FilledButton("Создать новое расписание",on_click=get_clicked)], alignment=ft.MainAxisAlignment.END,)
+            main_column,
+            ft.Row([ft.FilledButton("Создать новое расписание", on_click=get_clicked)],
+                   alignment=ft.MainAxisAlignment.END, )
         ]
     )
 
+    # Добавляем на страницу сам интерфейс И диалоговое окно (один раз!)
+    page.add(view_schedule, dialog_window)
 
 
 ft.app(target=main)
-
