@@ -55,4 +55,10 @@ def get_all_schedule():
         return list(session.scalars(stmt))
 
 
-print(get_all_schedule())
+def edit_schedule(schedule: str, calls: list):
+    init_db()
+    with Session(engine) as session:
+        current_schedule = session.query(Schedule).filter(Schedule.name == schedule).first()
+        current_schedule.call = calls
+        session.commit()
+        session.refresh(current_schedule)

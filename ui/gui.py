@@ -1,8 +1,7 @@
-from data.сall_schedule import get_all_schedule, create_schedule, return_bells, delite_schedule
+from data.сall_schedule import get_all_schedule, create_schedule, return_bells, delite_schedule, edit_schedule
 from logic.timer import TimerMusic
 from logic.music_player import MusicPlayer
 from data.music import MusicHandler
-
 
 import flet as ft
 
@@ -10,7 +9,8 @@ import flet as ft
 def main(page: ft.Page):
     page.title = 'ШколоZVOн'
 
-    global tim
+    global tim, edit_mod
+    edit_mod = False
 
     timetable = ft.TextField(label='Название нового расписания')
     schedule_zvonkov = get_all_schedule()
@@ -79,7 +79,16 @@ def main(page: ft.Page):
         main_column.controls = start()
         page.update()
 
-
+    def click_edit(e):
+        global edit_mod
+        edit_mod = True
+        timetable.value = e.control.data
+        list_edit = [timetable, ft.Button('Добавить звонок', on_click=new_bell)]  # не знаю как назвать
+        for i in return_bells(e.control.data):
+            list_edit.append(ft.TextField(label="Время", value=i))
+        bell_list.controls = list_edit
+        dialog_window.open = True
+        page.update()
 
     def start():
         schedule.clear()  # Очищаем старый список перед пересборкой
@@ -90,9 +99,9 @@ def main(page: ft.Page):
                         ft.Checkbox(value=False, on_change=change, data=i),
                         # Используем e.control.data, который передаем при клике
                         ft.Text(spans=[ft.TextSpan(i, on_click=click_schedule, data=i)], size=20),
-                        ft.Row(controls=[ft.IconButton(icon=ft.Icons.EDIT_SHARP),
-                                         ft.IconButton(icon=ft.Icons.DELETE,on_click=click_delete,data=i)],)
-                    ],alignment=ft.MainAxisAlignment.SPACE_BETWEEN
+                        ft.Row(controls=[ft.IconButton(icon=ft.Icons.EDIT_SHARP, on_click=click_edit, data=i),
+                                         ft.IconButton(icon=ft.Icons.DELETE, on_click=click_delete, data=i)], )
+                    ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN
                 ),
                 width=400,
                 alignment=ft.alignment.Alignment(0, 0),
@@ -111,15 +120,19 @@ def main(page: ft.Page):
 
     def new_timetable(e):
         if timetable.value:
-            schedule_zvonkov.append(timetable.value)
-
             list_bells = []
 
             for i in bell_list.controls[2:]:
                 if i.value:
                     list_bells.append(i.value)
 
-            create_schedule(timetable.value, list_bells)
+            if edit_mod:
+                print("[eq")
+                edit_schedule(timetable.value, list_bells)
+            else:
+                print(1212121)
+                schedule_zvonkov.append(timetable.value)
+                create_schedule(timetable.value, list_bells)
 
         # Вместо создания нового ft.Row, мы просто обновляем список элементов внутри main_column!
         main_column.controls = start()
@@ -129,14 +142,14 @@ def main(page: ft.Page):
         page.update()
 
     # Создаем фиксированную колонку для расписаний
-    main_column = ft.Column(controls=start(),height=page.window.height)
+    main_column = ft.Column(controls=start(), height=page.window.height)
 
     # Главный каркас страницы, который мы НЕ меняем динамически, а только обновляем его внутренности
     view_schedule = ft.Row(
         [
             main_column,
             ft.Column(controls=[ft.Row([ft.CupertinoFilledButton("Создать новое расписание", on_click=get_clicked)],
-                   alignment=ft.MainAxisAlignment.END, )],height=page.window.height)
+                                       alignment=ft.MainAxisAlignment.END, )], height=page.window.height)
         ]
     )
 
