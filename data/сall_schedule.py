@@ -46,3 +46,13 @@ def delite_schedule(schedule: str):
     with Session(engine) as session:
         session.delete(session.query(Schedule).fliter(Schedule.name == schedule).first())
         session.commit()
+
+
+def get_all_schedule():
+    init_db()
+    with Session(engine) as session:
+        stmt = select(Schedule.name)
+        return list(session.scalars(stmt))
+
+
+print(get_all_schedule())

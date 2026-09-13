@@ -1,4 +1,4 @@
-from tkinter import dialog
+from data.сall_schedule import get_all_schedule, create_schedule
 
 import flet as ft
 
@@ -7,7 +7,8 @@ def main(page: ft.Page):
     page.title = 'ШколоZVOн'
 
     timetable = ft.TextField(label='Название нового расписания')
-    schedule_zvonkov = ['Полное расписание', 'Сокращенное расписание', 'Залупа']
+    schedule_zvonkov = get_all_schedule()
+    print(schedule_zvonkov)
     schedule = []
 
     # Перенесли определение bell_list и dialog_window наверх, чтобы функции их видели
@@ -55,7 +56,7 @@ def main(page: ft.Page):
     def start():
         schedule.clear()  # Очищаем старый список перед пересборкой
         for i in schedule_zvonkov:
-                schedule.append(ft.Container(
+            schedule.append(ft.Container(
                 ft.Row(
                     controls=[
                         ft.Checkbox(value=False),
@@ -81,6 +82,15 @@ def main(page: ft.Page):
     def new_timetable(e):
         if timetable.value:
             schedule_zvonkov.append(timetable.value)
+
+            list_bells = []
+
+            for i in bell_list.controls[2:]:
+                if i.value:
+                    list_bells.append(i.value)
+
+            create_schedule(timetable.value, list_bells)
+
 
         # Вместо создания нового ft.Row, мы просто обновляем список элементов внутри main_column!
         main_column.controls = start()
