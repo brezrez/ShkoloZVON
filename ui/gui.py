@@ -30,35 +30,27 @@ def main(page: ft.Page):
         pass
 
 
-    schedule_zvonkov = ['Полное расписание', 'Сокращенное расписание', 'Залупа', '', '312312']
+    schedule_zvonkov = ['Полное расписание', 'Сокращенное расписание', 'Залупа']
 
 
     def new_timetable(e):
         schedule_zvonkov.append(timetable.value)
-        page.close(dialog_window)
-        timetable.value=''
-        schedule.append(ft.Container(
-            ft.Row(
-                controls=[ft.Checkbox(value=False),
-                          ft.Text(spans=[ft.TextSpan(timetable.value, on_click=lambda e: click_schedule(e), data=timetable.value)], size=20),
-                          dialog_window]
-            ),
-            width=400,
-            alignment=ft.alignment.Alignment(0, 0),
-            border_radius=24,
-            padding=20,
-            shadow=ft.BoxShadow(
-                spread_radius=1,
-                blur_radius=15,
-                color=ft.Colors.BLUE_GREY_300,
-                offset=ft.Offset(0, 0),
-                blur_style=ft.ShadowBlurStyle.OUTER),
-            bgcolor="white",
-            data=timetable.value
-        ))
-        view_schedule.update()
+        view_schedule = ft.Row(
+            [
+                ft.Column(
+                    controls=start()
+                ),
+                ft.Row([ft.FilledButton("Создать новое расписание", on_click=get_clicked)],
+                       alignment=ft.MainAxisAlignment.END, )
+            ]
+        )
+        page.clean()
+        page.add(view_schedule)
+        print(schedule)
         page.update()
-        print(schedule_zvonkov)
+        page.close(dialog_window)
+        timetable.value = ''
+        schedule = []
 
 
     global bell_list
@@ -72,39 +64,36 @@ def main(page: ft.Page):
             ft.Button("Сохранить", on_click=new_timetable),
         ],
     )
-
-
-
-
+    global schedule
 
     schedule = []
-
-    for i in schedule_zvonkov:
-        print(schedule_zvonkov.index(i))
-        schedule.append(ft.Container(
-            ft.Row(
-                controls=[ft.Checkbox(value=False),
-                          ft.Text(spans=[ft.TextSpan(i, on_click=lambda e: click_schedule(e), data=i)], size=20),
-                          dialog_window]
-            ),
-            width=400,
-            alignment=ft.alignment.Alignment(0, 0),
-            border_radius=24,
-            padding=20,
-            shadow=ft.BoxShadow(
-                spread_radius=1,
-                blur_radius=15,
-                color=ft.Colors.BLUE_GREY_300,
-                offset=ft.Offset(0, 0),
-                blur_style=ft.ShadowBlurStyle.OUTER),
-            bgcolor="white",
-            data=i
-        ))
+    def start():
+        for i in schedule_zvonkov:
+            schedule.append(ft.Container(
+                ft.Row(
+                    controls=[ft.Checkbox(value=False),
+                              ft.Text(spans=[ft.TextSpan(i, on_click=lambda e: click_schedule(e), data=i)], size=20),
+                              dialog_window]
+                ),
+                width=400,
+                alignment=ft.alignment.Alignment(0, 0),
+                border_radius=24,
+                padding=20,
+                shadow=ft.BoxShadow(
+                    spread_radius=1,
+                    blur_radius=15,
+                    color=ft.Colors.BLUE_GREY_300,
+                    offset=ft.Offset(0, 0),
+                    blur_style=ft.ShadowBlurStyle.OUTER),
+                bgcolor="white",
+                data=i
+            ))
+        return schedule
 
     view_schedule = ft.Row(
         [
             ft.Column(
-                controls=schedule
+                controls=start()
             ),
             ft.Row([ft.FilledButton("Создать новое расписание",on_click=get_clicked)], alignment=ft.MainAxisAlignment.END,)
         ]
@@ -114,6 +103,5 @@ def main(page: ft.Page):
     page.add(
         view_schedule
     )
-
 
 ft.app(target=main)
