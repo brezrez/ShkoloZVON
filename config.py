@@ -1,1 +1,1 @@
-MUSIC_PATH = "music"
+MUSIC_PATH = "music_dir"

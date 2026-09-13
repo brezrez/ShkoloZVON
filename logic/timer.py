@@ -6,7 +6,7 @@ from typing import Optional, Callable
 
 class TimerMusic:
     def __init__(self, time_music_callback: Callable, args: list,
-                 list_time_music: list = ["9:15", "10:10", "11:10", "12:05", "13:10", "22:40", "14:43", "12:20",'14:35']):
+                 list_time_music: list = ["9:15", "10:10", "11:10", "12:05", "13:10", "22:40", "14:43", "15:08",'15:11']):
         self.list_time_music = list_time_music
         self.thread_music: Optional[threading.Thread] = None
         self.is_running = False

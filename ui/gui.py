@@ -1,10 +1,15 @@
-from data.сall_schedule import get_all_schedule, create_schedule
+from data.сall_schedule import get_all_schedule, create_schedule, return_bells
+from logic.timer import TimerMusic
+from logic.music_player import MusicPlayer
+from data.music import MusicHandler
 
 import flet as ft
 
 
 def main(page: ft.Page):
     page.title = 'ШколоZVOн'
+
+    global tim
 
     timetable = ft.TextField(label='Название нового расписания')
     schedule_zvonkov = get_all_schedule()
@@ -46,12 +51,20 @@ def main(page: ft.Page):
         page.update()
 
     def click_schedule(e):
-
         for i in view_schedule.controls[0].controls:
             if i.data == e.control.data:
                 i.content.controls[0].value = not i.content.controls[0].value
         page.update()
-        pass
+
+    def change(e):
+        global tim
+        if e.control.value:
+            tim = TimerMusic(MusicPlayer().play_music, [MusicHandler().random_music(), 15],
+                             list_time_music=return_bells(e.control.data))
+            tim.start()
+        else:
+
+            tim.stop()
 
     def start():
         schedule.clear()  # Очищаем старый список перед пересборкой
@@ -59,7 +72,7 @@ def main(page: ft.Page):
             schedule.append(ft.Container(
                 ft.Row(
                     controls=[
-                        ft.Checkbox(value=False),
+                        ft.Checkbox(value=False, on_change=change, data=i),
                         # Используем e.control.data, который передаем при клике
                         ft.Text(spans=[ft.TextSpan(i, on_click=click_schedule, data=i)], size=20),
                     ]
@@ -90,7 +103,6 @@ def main(page: ft.Page):
                     list_bells.append(i.value)
 
             create_schedule(timetable.value, list_bells)
-
 
         # Вместо создания нового ft.Row, мы просто обновляем список элементов внутри main_column!
         main_column.controls = start()
