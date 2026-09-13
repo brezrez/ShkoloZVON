@@ -7,6 +7,8 @@ import flet as ft
 
 
 def main(page: ft.Page):
+    page.window.width=700
+
     page.title = 'ШколоZVOн'
 
     global tim, edit_mod
