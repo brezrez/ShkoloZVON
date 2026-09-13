@@ -55,7 +55,7 @@ def main(page: ft.Page):
     def start():
         schedule.clear()  # Очищаем старый список перед пересборкой
         for i in schedule_zvonkov:
-            schedule.append(ft.Container(
+                schedule.append(ft.Container(
                 ft.Row(
                     controls=[
                         ft.Checkbox(value=False),
