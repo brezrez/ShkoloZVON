@@ -70,7 +70,6 @@ def main(page: ft.Page):
                              list_time_music=return_bells(e.control.data))
             tim.start()
         else:
-
             tim.stop()
 
     def start():

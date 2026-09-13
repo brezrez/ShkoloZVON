@@ -44,7 +44,7 @@ def create_schedule(schedule: str, calls: list):
 def delite_schedule(schedule: str):
     init_db()
     with Session(engine) as session:
-        session.delete(session.query(Schedule).fliter(Schedule.name == schedule).first())
+        session.delete(session.query(Schedule).filter(Schedule.name == schedule).first())
         session.commit()
 
 
