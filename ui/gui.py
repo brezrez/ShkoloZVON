@@ -72,6 +72,10 @@ def main(page: ft.Page):
         else:
             tim.stop()
 
+    def click_delete():
+        return
+
+
     def start():
         schedule.clear()  # Очищаем старый список перед пересборкой
         for i in schedule_zvonkov:
@@ -81,7 +85,9 @@ def main(page: ft.Page):
                         ft.Checkbox(value=False, on_change=change, data=i),
                         # Используем e.control.data, который передаем при клике
                         ft.Text(spans=[ft.TextSpan(i, on_click=click_schedule, data=i)], size=20),
-                    ]
+                        ft.Row(controls=[ft.IconButton(icon=ft.Icons.EDIT_SHARP),
+                                         ft.IconButton(icon=ft.Icons.DELETE,on_click=click_delete)],)
+                    ],alignment=ft.MainAxisAlignment.SPACE_BETWEEN
                 ),
                 width=400,
                 alignment=ft.alignment.Alignment(0, 0),
@@ -118,14 +124,14 @@ def main(page: ft.Page):
         page.update()
 
     # Создаем фиксированную колонку для расписаний
-    main_column = ft.Column(controls=start())
+    main_column = ft.Column(controls=start(),height=page.window.height)
 
     # Главный каркас страницы, который мы НЕ меняем динамически, а только обновляем его внутренности
     view_schedule = ft.Row(
         [
             main_column,
-            ft.Row([ft.FilledButton("Создать новое расписание", on_click=get_clicked)],
-                   alignment=ft.MainAxisAlignment.END, )
+            ft.Column(controls=[ft.Row([ft.CupertinoFilledButton("Создать новое расписание", on_click=get_clicked)],
+                   alignment=ft.MainAxisAlignment.END, )],height=page.window.height)
         ]
     )
 
