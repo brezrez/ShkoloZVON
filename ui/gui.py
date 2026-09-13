@@ -55,6 +55,13 @@ def main(page: ft.Page):
             if i.data == e.control.data:
                 i.content.controls[0].value = not i.content.controls[0].value
         page.update()
+        global tim
+        if i.content.controls[0].value:
+            tim = TimerMusic(MusicPlayer().play_music, [MusicHandler().random_music(), 15],
+                             list_time_music=return_bells(e.control.data))
+            tim.start()
+        else:
+            tim.stop()
 
     def change(e):
         global tim
