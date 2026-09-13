@@ -8,7 +8,6 @@ def main(page: ft.Page):
 
     timetable = ft.TextField(label='Укажите не укажите')
 
-
     def get_clicked(e):
         bell_list.controls = [timetable, ft.Button('Добавить звонок', on_click=new_bell)]
         dialog_window.open = True
@@ -20,7 +19,6 @@ def main(page: ft.Page):
         bell_list.update()
         page.update()
 
-
     def click_schedule(e):
 
         for i in view_schedule.controls[0].controls:
@@ -29,16 +27,14 @@ def main(page: ft.Page):
         page.update()
         pass
 
-
     schedule_zvonkov = ['Полное расписание', 'Сокращенное расписание', 'Залупа']
-
 
     def new_timetable(e):
         schedule_zvonkov.append(timetable.value)
         view_schedule = ft.Row(
             [
                 ft.Column(
-                    controls=start()
+                    controls=start([])
                 ),
                 ft.Row([ft.FilledButton("Создать новое расписание", on_click=get_clicked)],
                        alignment=ft.MainAxisAlignment.END, )
@@ -46,28 +42,24 @@ def main(page: ft.Page):
         )
         page.clean()
         page.add(view_schedule)
-        print(schedule)
         page.update()
         page.close(dialog_window)
         timetable.value = ''
-        schedule = []
-
 
     global bell_list
-    bell_list = ft.Column([ft.TextField(label='Название расписания'), ft.Button('Добавить звонок', on_click=new_bell)], spacing=15, width=450, height=450, scroll=ft.ScrollMode.AUTO)
+    bell_list = ft.Column([ft.TextField(label='Название расписания'), ft.Button('Добавить звонок', on_click=new_bell)],
+                          spacing=15, width=450, height=450, scroll=ft.ScrollMode.AUTO)
 
     dialog_window = ft.AlertDialog(
         title=ft.Text("Редактировать задание"),
         content=bell_list,
         actions=[
-            ft.Button("Отмена",on_click = lambda e: page.close(dialog_window)),
+            ft.Button("Отмена", on_click=lambda e: page.close(dialog_window)),
             ft.Button("Сохранить", on_click=new_timetable),
         ],
     )
-    global schedule
 
-    schedule = []
-    def start():
+    def start(schedule: list):
         for i in schedule_zvonkov:
             schedule.append(ft.Container(
                 ft.Row(
@@ -93,15 +85,16 @@ def main(page: ft.Page):
     view_schedule = ft.Row(
         [
             ft.Column(
-                controls=start()
+                controls=start([])
             ),
-            ft.Row([ft.FilledButton("Создать новое расписание",on_click=get_clicked)], alignment=ft.MainAxisAlignment.END,)
+            ft.Row([ft.FilledButton("Создать новое расписание", on_click=get_clicked)],
+                   alignment=ft.MainAxisAlignment.END, )
         ]
     )
-
 
     page.add(
         view_schedule
     )
+
 
 ft.app(target=main)
