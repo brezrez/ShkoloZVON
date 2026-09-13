@@ -1,7 +1,8 @@
-from data.сall_schedule import get_all_schedule, create_schedule, return_bells
+from data.сall_schedule import get_all_schedule, create_schedule, return_bells, delite_schedule
 from logic.timer import TimerMusic
 from logic.music_player import MusicPlayer
 from data.music import MusicHandler
+
 
 import flet as ft
 
@@ -72,8 +73,12 @@ def main(page: ft.Page):
         else:
             tim.stop()
 
-    def click_delete():
-        return
+    def click_delete(e):
+        delite_schedule(e.control.data)
+        schedule_zvonkov.remove(e.control.data)
+        main_column.controls = start()
+        page.update()
+
 
 
     def start():
@@ -86,7 +91,7 @@ def main(page: ft.Page):
                         # Используем e.control.data, который передаем при клике
                         ft.Text(spans=[ft.TextSpan(i, on_click=click_schedule, data=i)], size=20),
                         ft.Row(controls=[ft.IconButton(icon=ft.Icons.EDIT_SHARP),
-                                         ft.IconButton(icon=ft.Icons.DELETE,on_click=click_delete)],)
+                                         ft.IconButton(icon=ft.Icons.DELETE,on_click=click_delete,data=i)],)
                     ],alignment=ft.MainAxisAlignment.SPACE_BETWEEN
                 ),
                 width=400,
